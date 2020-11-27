@@ -5,7 +5,7 @@ const config = require('../../config/settings')
 const encryptionManager = require('../../libs/encryption')
 
 // program to hash the plain text password before saving
-// pre before saving and post after saving we using pre before we need it before is saves in the db
+// pre before saving and post after saving we using pre because we need it before is saves in the db
 function methods(Schema) {
     Schema.pre('save', async function (next) {
         const user = this;
