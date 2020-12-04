@@ -47,7 +47,7 @@ class UserController {
             await savedUser.save()
             console.log('>>>>>>', savedUser)
             return res.status(200)
-                .send(responseHelper.output(200, savedUser, 'user created successfully'))
+                .send(responseHelper.output(200, 'user created successfully', savedUser))
         } catch (error) {
             console.error('internal server error', error)
             return res.status(500)
@@ -76,7 +76,7 @@ class UserController {
                 //compare password
                 if (await encryptionManager.compareHashed(password, user.password)) {
                     await user.generateAuthToken()
-                    return res.status(201).send(responseHelper.success(200, user))
+                    return res.status(201).send(responseHelper.output(201, user))
                 } else {
                     return res.status(400).send(responseHelper.success(400, 'Incorrect Password'))
                 }
@@ -139,7 +139,7 @@ class UserController {
             }
             const follow = await userService.followQuestion(data)
             return res.status(200)
-                .send(responseHelper.output(200, follow, 'Question followed successfully'))
+                .send(responseHelper.output(200, 'Question followed successfully', follow))
         } catch (err) {
             console.error('internal server error', err)
             return res.status(500).send(responseHelper.error(500, 'Internal Server Error'))
@@ -153,35 +153,48 @@ class UserController {
    * @returns returns object of the required response
    */
     async searchUser(req, res) {
-        let { limit, page, s, lat, long } = req.query
-        limit = parseInt(limit)
-        page = Number(page)
+        try {
+            let { limit, page, s, lat, long } = req.query
+            limit = parseInt(limit)
+            page = Number(page)
 
-        if (!limit || !page) {
-            limit = 10,
-                page = 0
-        }
+            if (!limit || !page) {
+                limit = 10,
+                    page = 0
+            }
 
-        if (!lat || !long) {
-            return res.status(400)
-                .send(responseHelper.error(400, 'Please pass the lat and long'))
-        }
+            if (!lat || !long) {
+                return res.status(400)
+                    .send(responseHelper.error(400, 'Please pass the lat and long'))
+            }
 
-        // searches within 4km radius
-        const search = {
-            location: {
-                $near: {
-                    $maxDistance: 4000,
-                    $geometry: {
-                        type: 'Point',
-                        coordinates: [lat, long]
+            // searches within 4km radius
+            const search = {
+                location: {
+                    $near: {
+                        $maxDistance: 4000,
+                        $geometry: {
+                            type: 'Point',
+                            coordinates: [lat, long]
+                        }
                     }
                 }
-            }
-        };
+            };
 
-        const users = await userService.search(search, limit, page)
-        const count = user.length
+            const users = await userService.search(search, limit, page)
+            const count = user.length
+            const meta = {
+                limit,
+                page
+            }
+            const paginate = await pagination(count, meta)
+            return res.status(200)
+                .send(responseHelper.success(200, 'results for search gotten successfully', users, paginate))
+        } catch (error) {
+            console.error('internal server error', error)
+            return res.status(500)
+                .send(responseHelper.error(500, `internal server error`))
+        }
     }
 }
 module.exports = new UserController()

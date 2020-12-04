@@ -15,7 +15,7 @@ const answerSchema = new mongoose.Schema({
     date: {
         type: String
     },
-    like: {
+    vote: {
         type: Number,
         default: 0
     },

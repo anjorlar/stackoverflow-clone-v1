@@ -15,12 +15,12 @@ const auth = async (req, res, next) => {
             });
         }
         token = token.replace('Bearer ', '')
-        console.log('token token >>>>>>', token)
+        // console.log('token token >>>>>>', token)
         const decoded = jwt.verify(token, config.JWTSECRET)
-        console.log('decoded >>>>>>', decoded)
+        // console.log('decoded >>>>>>', decoded)
         const id = decoded._id
         const user = await User.findOne({ _id: id, 'tokens.token': token }).exec()
-        console.log('>>>> auth user found', user)
+        // console.log('>>>> auth user found', user)
 
         if (!user) {
             throw new Error('decoded User not found')

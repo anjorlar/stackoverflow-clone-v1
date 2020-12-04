@@ -2,7 +2,7 @@ class Responses {
     constructor() {
         return this;
     }
-    success(errorCode, data, message, meta) {
+    success(errorCode, message, data, meta) {
         return {
             error: false,
             errorCode,
@@ -18,7 +18,7 @@ class Responses {
             message
         };
     };
-    output(errorCode, data, message) {
+    output(errorCode, message, data) {
         return {
             error: false,
             errorCode,
