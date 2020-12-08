@@ -36,9 +36,9 @@ questionSchema.methods.toJSON = function () {
 
 questionSchema.index({ title: 'text', description: 'text' })
 // mapps question to answers
-questionSchema.virtual('answers', {
+questionSchema.virtual('Answers', {
     ref: 'Answers',
-    foreignField: 'question',
+    foreignField: 'Question',
     localField: '_id'
 });
 const Question = mongoose.model('Question', questionSchema)

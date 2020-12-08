@@ -12,8 +12,8 @@ class QuestionService {
     }
 
     updateById(id, data) {
-        console.log('update by id', id, data)
-        return questionModel.findByIdAndUpdate(id, field, {
+        console.log('update by id', id, data['$inc'])
+        return questionModel.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true
         }).lean()

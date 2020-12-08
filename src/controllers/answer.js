@@ -36,6 +36,11 @@ class AnswersController {
                 .send(responseHelper.error(400, `Question with ${questionId} id does not exist`))
         }
         try {
+            if (!data.title || !data.description) {
+                return res.status(400).send(
+                    responseHelper.error(400, `Please pass the title and description`)
+                )
+            }
             const date = getCurrentTime()
             const param = {
                 title: data.title,

@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 app.use(API_VERSION, userRoute)
 app.use(API_VERSION, questionRoute)
-// app.use(API_VERSION, answerRoute)
+app.use(API_VERSION, answerRoute)
 //call base end point
 app.get('/', (req, res) => {
     res.status(200).send({

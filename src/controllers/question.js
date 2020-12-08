@@ -1,7 +1,6 @@
 'use strict'
 
-const mongoose = require('mongoose')
-const joi = require('joi')
+const mongoose = require('mongoose');
 const questionService = require('../services/question');
 const responseHelper = require('../libs/response')
 const pagination = require('../libs/pagination');
@@ -70,11 +69,16 @@ class QuestionController {
                 return res.status(400)
                     .send(responseHelper.error(400, `Question with ${id} id does not exist`))
             }
+            console.log('question', question)
+            console.log('req.user._id', req.user._id)
             // get answers by virtual population
             const answers = await question.populate('answers').execPopulate()
             console.log(">>>>>>> viewQuestion answers", answers)
             return res.status(200)
-                .send(responseHelper.output(200, 'questions and answers gotten successfully', { question, answers: question.answers }))
+                .send(
+                    responseHelper.output(200, 'questions and answers gotten successfully',
+                        { question, answers: question.answers }
+                    ))
         } catch (error) {
             console.log('internal server error', error)
             return res.status(500).send(responseHelper.error(500, `internal server error`))
@@ -140,26 +144,27 @@ class QuestionController {
 
     async voteQuestion(req, res) {
         let { id } = req.params
+        const { vote } = req.body
         const isValid = mongoose.Types.ObjectId.isValid(id)
         if (!isValid) {
             return res.status(400)
                 .send(responseHelper.error(400, `Invalid Id`))
         }
-        const { vote } = req.body
-        //check that vote must be a type of boolean, downvote:false, upvote:true
-        if (typeof vote !== boolean) {
+        //check that vote must be a type of boolean and also if a value was passed in the req.body,
+        // downvote:false, upvote:true
+        if (typeof vote !== 'boolean') {
             return res.status(400)
                 .send(responseHelper.error(400, `invalid request vote must be a boolean`))
         }
         try {
-            const question = questionService.getId(id)
+            const question = await questionService.getId(id)
             if (!question) {
                 return res.status(400)
                     .send(responseHelper.error(400, 'Question does not exist'))
             }
             if (question.owner.toString() === req.user._id.toString()) {
                 return res.status(400)
-                    .send(400, `You can not vote for a question you created`)
+                    .send(responseHelper.error(400, `You can not vote for a question you created`))
             }
             // increase or decrease vote base on input
             let value = 0;
@@ -175,7 +180,6 @@ class QuestionController {
                 $inc: { vote: value }
             }
             const updatedVote = await questionService.updateById(id, incrementVal)
-            console.log('updated >>>>>>>', updatedVote)
             return res.status(200)
                 .send(responseHelper.output(200, 'vote recorded successfully', updatedVote))
         } catch (error) {
