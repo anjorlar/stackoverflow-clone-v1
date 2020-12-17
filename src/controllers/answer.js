@@ -6,7 +6,7 @@ const getCurrentTime = require('../utils/getDate');
 const pagination = require('../libs/pagination');
 const logger = require('../utils/logger');
 const rabbitMq = require('../libs/rabbitmq');
-const QUEUE_NAME = 'SUBSCRIBER'
+const QUEUE_NAME = 'SUBSCRIBE'
 
 
 class AnswersController {
@@ -47,15 +47,13 @@ class AnswersController {
                 description: data.description,
                 date,
                 question: questionId,
-                // owner: req.user._id
+                owner: req.user._id
             }
-            param.owner = req.user._id
+            // param.owner = req.user._id
             //add answer to database
             const answers = await answerService.add(param)
-            console.log('answers >>>>>', answers)
             //checks if there are followers to the question
             const followers = await answerService.getFollower(questionId)
-            console.log('followers >>>>>', followers)
             let dataSentToQueue;
             if (followers.length > 0) {
                 const queueData = {
@@ -71,10 +69,8 @@ class AnswersController {
                     }
                 };
                 // push data to be sent to queue
-                console.log('dataSentToQueue >>>>> inside', dataSentToQueue)
-                // dataSentToQueue = await rabbitMq.sendQueue(QUEUE_NAME, queueData)
-            }
-            console.log('dataSentToQueue >>>>>', dataSentToQueue)
+                dataSentToQueue = await rabbitMq.sendQueue(QUEUE_NAME, queueData)
+            };
             return res.status(200)
                 .send(responseHelper.output(200, `answer saved and sent to question followers`, answers))
         } catch (error) {

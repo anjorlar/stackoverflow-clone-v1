@@ -132,6 +132,12 @@ class UserController {
                 return res
                     .status(400).send(responseHelper.error(400, `Invalid QuestionId`))
             }
+            const checkEmail = await userService.checkMail(req.user.email)
+            if (checkEmail) {
+                return res.status(400).send(responseHelper.error(
+                    400, `You are already following this question`
+                ))
+            }
             const data = {
                 user: req.user._id,
                 question: questionId,

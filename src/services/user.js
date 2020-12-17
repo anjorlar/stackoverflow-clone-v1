@@ -20,6 +20,9 @@ class UserServices {
         return Follow.create(data)
     }
 
+    checkMail(email) {
+        return Follow.findOne({ email })
+    }
     //search user with search details
     search(search, limit, page) {
         return User.find(search)

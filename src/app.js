@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const API_VERSION = '/v1'
+const QUEUE_NAME = 'SUBSCRIBE'
 
 //connects to mongoDb
 require('./db/mongoose')
@@ -20,6 +21,10 @@ app.use(cors())
 app.use(API_VERSION, userRoute)
 app.use(API_VERSION, questionRoute)
 app.use(API_VERSION, answerRoute)
+
+// calls the send mailer function
+const sendAnswerMailer = require('./libs/rabbitmq')
+sendAnswerMailer.receiveQueue(QUEUE_NAME)
 //call base end point
 app.get('/', (req, res) => {
     res.status(200).send({

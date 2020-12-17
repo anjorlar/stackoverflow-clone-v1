@@ -10,7 +10,7 @@ class AnswerService {
     }
 
     getFollower(id) {
-        return followerModel.find({ id, active: true })
+        return followerModel.find({ question: id, active: true })
             .select('email').exec()
     }
 
