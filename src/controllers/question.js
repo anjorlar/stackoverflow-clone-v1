@@ -18,7 +18,7 @@ class QuestionController {
         try {
             let { title, description } = req.body
             const date = getCurrentTime()
-            console.log('>>>>>>> date', date)
+            // console.log('>>>>>>> date', date)
             if (!title) {
                 return res.status(400)
                     .send(responseHelper.error(400, `title is required`))
@@ -33,7 +33,7 @@ class QuestionController {
                 date
             }
             // sets user id for question
-            console.log('da MMMMMMMM te', date)
+            // console.log('da MMMMMMMM te', date)
             data.owner = req.user._id
             const question = await questionService.addQuestion(data)
             // console.log('queestion ???????????', question)
@@ -73,7 +73,7 @@ class QuestionController {
             console.log('req.user._id', req.user._id)
             // get answers by virtual population
             const answers = await question.populate('answers').execPopulate()
-            console.log(">>>>>>> viewQuestion answers", answers)
+            // console.log(">>>>>>> viewQuestion answers", answers)
             return res.status(200)
                 .send(
                     responseHelper.output(200, 'questions and answers gotten successfully',

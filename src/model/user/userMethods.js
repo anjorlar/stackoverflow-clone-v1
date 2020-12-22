@@ -37,8 +37,8 @@ function methods(Schema) {
     Schema.methods.toJSON = function () {
         const user = this
         const newUser = user.toObject()
-        delete newUser.password
-        delete newUser.tokens
+        delete newUser.password // deletes the user password from been sent as part of the response
+        // delete newUser.tokens // deletes the user login or signup token from been sent as part of the response
         return newUser
     }
 };

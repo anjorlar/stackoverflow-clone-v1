@@ -26,11 +26,14 @@ const questionSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-// ????? deletes ....
+/// hides private data
+// accesses the userSchema.statics.findByCredentials function and it is a method on the instance of the 'user'
+// THE toJSON(it must be exactly that toJSON) method deletes data he do not want to be sent as a response as we stated here
+
 questionSchema.methods.toJSON = function () {
     const question = this
     const newQuestion = question.toObject()
-    delete newQuestion.owner
+    delete newQuestion.owner // deletes the id of the owner of the question from the response been sent
     return newQuestion
 }
 

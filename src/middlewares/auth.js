@@ -2,7 +2,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../model/user/user');
 const config = require('../config/settings');
 const logger = require('../utils/logger')
-
+/**
+ * auth middleware
+ * @param {*} req Http request object
+ * @param {*} res Http response object
+ * @param {*} next next midleware
+ * @returns returns the authenticated user
+ */
 const auth = async (req, res, next) => {
     try {
         // console.log('req, req req >>>>>', req)
@@ -29,9 +35,9 @@ const auth = async (req, res, next) => {
         req.user = user
         next()
     } catch (error) {
-        console.log('error', error)
+        console.log('error with auth', error)
         logger.error('error with auth', error)
-        res.status(401).aend({
+        res.status(401).send({
             code: 401,
             error: true,
             message: 'Authentication is required'
