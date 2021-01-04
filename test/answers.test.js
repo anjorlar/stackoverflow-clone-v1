@@ -25,6 +25,8 @@ const answer = {
 
 describe('Answers', () => {
     beforeAll(async () => {
+        await Question.deleteMany()
+        await Answer.deleteMany()
         await Question.create(question)
         await Answer.create(answer)
     });
@@ -37,10 +39,12 @@ describe('Answers', () => {
     })
 
 
-    test('it should require content to search', async () => {
+    test('it should get content if search criteria matches answers', async () => {
         const res = await request(app)
             .get('/v1/answer/search?a=cont')
             .expect(200)
-        expect(response.body.data[0].description).toBe('for contenarization')
+        console.log('res dscription >>>>>>>>>> res.body', res.body.data)
+        expect(res.body.message).toBe(`All answers retrieved successfully`)
+        // expect(res.body.data[0].description).toBe('for contenarization')
     })
 })

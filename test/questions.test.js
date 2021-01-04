@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test'
 const request = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../src/app')
-const Answer = require('../src/model/answers')
+// const Answer = require('../src/model/answers')
 const Question = require('../src/model/questions')
 const { users } = require('./fakeUsers')
 const user_1 = users[0]
@@ -14,9 +14,10 @@ const question = {
     description: 'primitive types',
     owner: user_1._id
 };
-
+// console.log('....', question)
 describe('View Question', () => {
     beforeAll(async () => {
+        await Question.deleteMany()
         await Question.create(question)
     })
 
@@ -28,11 +29,12 @@ describe('View Question', () => {
     })
 
     test('it should throw question not found for invalid questionId', async () => {
+        let id = `5eaedb5e0f0ecb1c45ef1d7a`
         const res = await request(app)
-            .get('/v1/question/view/5eaedb5e0f0ecb1c45ef1d7a')
-            .expect(404)
+            .get(`/v1/question/view/5eaedb5e0f0ecb1c45ef1d7a`)
+            .expect(400)
         // expect(res.body.message).toBe('question not found')
-        expect(res.body.message).toBe('question does not exist')
+        expect(res.body.message).toBe(`Question with ${id} id does not exist`)
     })
 
     test('it should get question succesfully', async () => {
@@ -40,6 +42,7 @@ describe('View Question', () => {
             .get(`/v1/question/view/${question._id}`)
             .expect(200)
         expect(res.body.data.question.description).toBe('primitive types')
+        expect(res.body.message).toBe('questions and answers gotten successfully')
     })
 
     test('it should throw an error if content to search is not provided', async () => {
@@ -53,6 +56,7 @@ describe('View Question', () => {
         const res = await request(app)
             .get('/v1/question/search?&q=ja')
             .expect(200)
-        expect(res.body.message).toBe('javascript')
+        expect(res.body.message).toBe('All questions retrieved successfully')
+        // expect(res.body)
     })
 })

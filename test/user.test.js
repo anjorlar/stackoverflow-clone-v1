@@ -147,7 +147,8 @@ describe('Tests User', () => {
         const res = await request(app)
             .post('/v1/logout')
             .set(`Authorization`, `Bearer ${user1.tokens[0].token}`)
-            .expect(200)
+            .expect(200);
+        // console.log('>>>>>>>>>>>> ${user1.tokens[0].token}', `${user1.tokens[0].token}`);
     })
 
     // test for search routes
@@ -171,6 +172,7 @@ describe('Tests User', () => {
             .get('/v1/user/search?&lat=6.439401999999999&long=3.5266233999999996')
             .set('Authorization', `Bearer ${user1.tokens[0].token}`)
             .expect(200)
+        // console.log('>>>>>>>>>>>> res', res)
     })
 
     // add question
@@ -213,7 +215,7 @@ describe('Questions', () => {
 
     test('user should only be able to edit title and description in update', async () => {
         const res = await request(app)
-            .put('/v1/question/update/${question._id}')
+            .put(`/v1/question/update/${question._id}`)
             .set('Authorization', `Bearer ${user1.tokens[0].token}`)
             .send({
                 title: 'Java',
@@ -226,19 +228,20 @@ describe('Questions', () => {
 
     test('user should only be able to edit succesfully', async () => {
         const res = await request(app)
-            .put('/v1/question/update/${question._id}')
+            .put(`/v1/question/update/${question._id}`)
             .set('Authorization', `Bearer ${user1.tokens[0].token}`)
             .send({
                 title: 'gitlab',
                 description: 'bitbucket github gitlab'
             })
             .expect(200)
-        expect(res.body.message).toBe('bitbucket github gitlab')
+        expect(res.body.message).toBe('question updated successfully')
     });
 });
 
 describe('Answer', () => {
     test('it should return error when answer is provided for invalid question', async () => {
+        let questionId = '5eafd5f38b31f4474a6b531e';
         const res = await request(app)
             .post('/v1/answer/add')
             .set('Authorization', `Bearer ${user2.tokens[0].token}`)
@@ -249,6 +252,7 @@ describe('Answer', () => {
                 questionId: '5eafd5f38b31f4474a6b531e'
             })
         expect(res.body.message).toBe(`Question with ${questionId} id does not exist`)
+        // console.log('>>>>>>>>>>>> res', res.body)
     });
 
     test('it should return error when invalid Id Type is provided', async () => {
@@ -261,14 +265,14 @@ describe('Answer', () => {
                 description: 'hmmmmm',
                 questionId: 'qwetyu083'
             })
-        expect(res.body.message).toBe('invalid id type')
+        expect(res.body.message).toBe('invalid Id')
     })
 
     test('it should succesfully add question', async () => {
         const res = await request(app)
             .post('/v1/answer/add')
             .set('Authorization', `Bearer ${user2.tokens[0].token}`)
-            .expect(400)
+            .expect(200)
             .send({
                 title: 'Crony Capitalism',
                 description: 'A bad economic model',

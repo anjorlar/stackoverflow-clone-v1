@@ -55,13 +55,12 @@ class QuestionController {
 
     async viewQuestion(req, res) {
         let { id } = req.params
-        console.log('id ???????????', id)
+        // console.log('id ???????????', id)
         // id = id.toString()
         // console.log('id ????????id id id???', id)
         const isValid = mongoose.Types.ObjectId.isValid(id)
-        console.log('iisValidd ???????????', isValid)
         if (!isValid) {
-            return res.status(400).send(responseHelper.error(400, 'invalid id type'))
+            return res.status(400).send(responseHelper.error(400, 'invalid Id'))
         }
         try {
             const question = await questionService.getId(id)
@@ -69,8 +68,8 @@ class QuestionController {
                 return res.status(400)
                     .send(responseHelper.error(400, `Question with ${id} id does not exist`))
             }
-            console.log('question', question)
-            console.log('req.user._id', req.user._id)
+            // console.log('question', question)
+            // console.log('req.user._id', req.user._id)
             // get answers by virtual population
             const answers = await question.populate('answers').execPopulate()
             // console.log(">>>>>>> viewQuestion answers", answers)
