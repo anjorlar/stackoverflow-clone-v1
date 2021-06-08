@@ -1,7 +1,6 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const joi = require('joi')
 const userService = require('../services/user');
 const responseHelper = require('../libs/response');
 const pagination = require('../libs/pagination');
@@ -45,9 +44,8 @@ class UserController {
             const savedUser = await userService.createUser(data)
             await savedUser.generateAuthToken()
             await savedUser.save()
-            console.log('>>>>>>', savedUser)
-            return res.status(200)
-                .send(responseHelper.output(200, 'user created successfully', savedUser))
+            return res.status(201)
+                .send(responseHelper.output(201, 'user created successfully', savedUser))
         } catch (error) {
             console.error('internal server error', error)
             return res.status(500)
@@ -67,7 +65,7 @@ class UserController {
             let { email, password } = req.body
             if (!email || !password) {
                 return res.status(400).send(
-                    responseHelper.error(400, `Please enter the correct email and password`)
+                    responseHelper.error(400, `Please enter a valid email and password`)
                 )
             }
             // get user details
@@ -76,7 +74,7 @@ class UserController {
                 //compare password
                 if (await encryptionManager.compareHashed(password, user.password)) {
                     await user.generateAuthToken()
-                    return res.status(201).send(responseHelper.output(201, user))
+                    return res.status(200).send(responseHelper.output(200, 'User logged in successfully', user))
                 } else {
                     return res.status(400).send(responseHelper.success(400, 'Incorrect Password'))
                 }
@@ -99,11 +97,6 @@ class UserController {
      */
     async userLogout(req, res) {
         try {
-            // req.user['tokens'] = req.user['tokens'].filter(element => {
-            //     return element.tokens !== req.token
-            // })
-
-            // console.log('>>>>>>>', req)
             req.user.tokens = req.user.tokens.filter(element => {
                 return element.token !== req.token
             })
@@ -188,7 +181,7 @@ class UserController {
             };
 
             const users = await userService.search(search, limit, page)
-            const count = user.length
+            const count = users.length
             const meta = {
                 limit,
                 page

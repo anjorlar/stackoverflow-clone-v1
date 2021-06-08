@@ -14,7 +14,6 @@ const question = {
     description: 'primitive types',
     owner: user_1._id
 };
-// console.log('....', question)
 describe('View Question', () => {
     beforeAll(async () => {
         await Question.deleteMany()
@@ -33,7 +32,6 @@ describe('View Question', () => {
         const res = await request(app)
             .get(`/v1/question/view/5eaedb5e0f0ecb1c45ef1d7a`)
             .expect(400)
-        // expect(res.body.message).toBe('question not found')
         expect(res.body.message).toBe(`Question with ${id} id does not exist`)
     })
 
