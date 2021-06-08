@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const sendAnswerMailer = require('./libs/rabbitmq')
 const API_VERSION = '/v1'
 const QUEUE_NAME = 'SUBSCRIBE'
 
@@ -8,6 +9,8 @@ const QUEUE_NAME = 'SUBSCRIBE'
 require('./db/mongoose')
 //runs scheduler to sendmail
 require('./jobs/mailer');
+
+
 const app = express()
 
 //routes
@@ -22,8 +25,7 @@ app.use(API_VERSION, userRoute)
 app.use(API_VERSION, questionRoute)
 app.use(API_VERSION, answerRoute)
 
-// calls the send mailer function
-const sendAnswerMailer = require('./libs/rabbitmq')
+// initialises the send mailer function
 sendAnswerMailer.receiveQueue(QUEUE_NAME)
 //call base end point
 app.get('/', (req, res) => {

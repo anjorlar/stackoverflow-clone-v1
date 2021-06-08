@@ -18,7 +18,7 @@ class QuestionController {
         try {
             let { title, description } = req.body
             const date = getCurrentTime()
-            console.log('>>>>>>> date', date)
+            // console.log('>>>>>>> date', date)
             if (!title) {
                 return res.status(400)
                     .send(responseHelper.error(400, `title is required`))
@@ -33,7 +33,7 @@ class QuestionController {
                 date
             }
             // sets user id for question
-            console.log('da MMMMMMMM te', date)
+            // console.log('da MMMMMMMM te', date)
             data.owner = req.user._id
             const question = await questionService.addQuestion(data)
             // console.log('queestion ???????????', question)
@@ -55,13 +55,12 @@ class QuestionController {
 
     async viewQuestion(req, res) {
         let { id } = req.params
-        console.log('id ???????????', id)
+        // console.log('id ???????????', id)
         // id = id.toString()
         // console.log('id ????????id id id???', id)
         const isValid = mongoose.Types.ObjectId.isValid(id)
-        console.log('iisValidd ???????????', isValid)
         if (!isValid) {
-            return res.status(400).send(responseHelper.error(400, 'invalid id type'))
+            return res.status(400).send(responseHelper.error(400, 'invalid Id'))
         }
         try {
             const question = await questionService.getId(id)
@@ -69,11 +68,11 @@ class QuestionController {
                 return res.status(400)
                     .send(responseHelper.error(400, `Question with ${id} id does not exist`))
             }
-            console.log('question', question)
-            console.log('req.user._id', req.user._id)
+            // console.log('question', question)
+            // console.log('req.user._id', req.user._id)
             // get answers by virtual population
             const answers = await question.populate('answers').execPopulate()
-            console.log(">>>>>>> viewQuestion answers", answers)
+            // console.log(">>>>>>> viewQuestion answers", answers)
             return res.status(200)
                 .send(
                     responseHelper.output(200, 'questions and answers gotten successfully',

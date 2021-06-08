@@ -4,6 +4,6 @@ const answerController = require('../controllers/answer');
 const auth = require('../middlewares/auth')
 
 router.post('/answer/add', auth, answerController.addAnswers)
-router.get('/answer/search', auth, answerController.searchAnswers)
+router.get('/answer/search', answerController.searchAnswers)
 
 module.exports = router

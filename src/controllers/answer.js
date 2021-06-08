@@ -27,7 +27,7 @@ class AnswersController {
         const isValid = mongoose.Types.ObjectId.isValid(questionId)
         if (!isValid) {
             return res.status(400)
-                .send(responseHelper.error(400, 'invalid id type'))
+                .send(responseHelper.error(400, 'invalid Id'))
         }
         //gets question id
         const question = await questionService.getId(questionId)
