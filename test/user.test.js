@@ -140,7 +140,6 @@ describe('Tests User', () => {
             .post('/v1/logout')
             .set(`Authorization`, '')
             .expect(401)
-        // console.log('>>>>>>>>>>>', res.message)
     })
 
     test(`it should logout a user`, async () => {
@@ -148,7 +147,6 @@ describe('Tests User', () => {
             .post('/v1/logout')
             .set(`Authorization`, `Bearer ${user1.tokens[0].token}`)
             .expect(200);
-        // console.log('>>>>>>>>>>>> ${user1.tokens[0].token}', `${user1.tokens[0].token}`);
     })
 
     // test for search routes
@@ -172,7 +170,6 @@ describe('Tests User', () => {
             .get('/v1/user/search?&lat=6.439401999999999&long=3.5266233999999996')
             .set('Authorization', `Bearer ${user1.tokens[0].token}`)
             .expect(200)
-        // console.log('>>>>>>>>>>>> res', res)
     })
 
     // add question
@@ -252,7 +249,6 @@ describe('Answer', () => {
                 questionId: '5eafd5f38b31f4474a6b531e'
             })
         expect(res.body.message).toBe(`Question with ${questionId} id does not exist`)
-        // console.log('>>>>>>>>>>>> res', res.body)
     });
 
     test('it should return error when invalid Id Type is provided', async () => {

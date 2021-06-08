@@ -43,8 +43,6 @@ describe('Answers', () => {
         const res = await request(app)
             .get('/v1/answer/search?a=cont')
             .expect(200)
-        console.log('res dscription >>>>>>>>>> res.body', res.body.data)
         expect(res.body.message).toBe(`All answers retrieved successfully`)
-        // expect(res.body.data[0].description).toBe('for contenarization')
     })
 })
