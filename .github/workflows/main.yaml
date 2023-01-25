@@ -35,16 +35,28 @@
 #           heroku_app_name: "YOUR APP's NAME" #Must be unique in Heroku
 #           heroku_email: "YOUR EMAIL"
 
+# on:
+#   pull-request:
+#     branches:
+#       - master
+
+
 on:
-  pull-request:
-    branches:
-      - master
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+
 
 jobs:
-  # build:
-  print_hello:
+  build:
+  # print_hello:
     runs-on: ubuntu-latest
       steps:
-        # - uses: actions/checkout@v2
+        - uses: actions/checkout@v2
         # - 
-        - run: console.log('github actions running')
+        # - run: console.log('github actions running')
+          # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
