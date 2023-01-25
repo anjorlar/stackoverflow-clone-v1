@@ -1,67 +1,4 @@
-# name: Stackoverflow-clone-v1
-# run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-# on: [push]
-# jobs:
-#   Explore-GitHub-Actions:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-#       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-#       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-#       - name: Check out repository code
-#         uses: actions/checkout@v3
-#       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-#       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-#       - name: List files in the repository
-#         run: |
-#           ls ${{ github.workspace }}
-#       - run: echo "🍏 This job's status is ${{ job.status }}."
-
-# name: Stackoverflow-clone-v1
-
-# on:
-#   push:
-#     branches:
-#       - master
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-#         with:
-#           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#           heroku_app_name: "YOUR APP's NAME" #Must be unique in Heroku
-#           heroku_email: "YOUR EMAIL"
-
-# on:
-#   pull-request:
-#     branches:
-#       - master
-
-
-# on:
-#   push:
-#     branches: [ $default-branch ]
-#   pull_request:
-#     branches: [ $default-branch ]
-
-
-
-# jobs:
-#   build:
-#   # print_hello:
-#     runs-on: ubuntu-latest
-#       steps:
-#         - uses: actions/checkout@v2
-#         # - 
-#         # - run: console.log('github actions running')
-#           # Runs a single command using the runners shell
-#       - name: Run a one-line script
-#         run: echo Hello, world!
-
-name: Main
+name: Stackoverflow-clone-v1
 on:
   push:
     branches: [ $default-branch ]
@@ -78,10 +15,12 @@ jobs:
         uses: actions/setup-node@v2
         with: 
           node-version: "10.x"
+          cache: 'npm'
       - name: Install dependencies
         run: npm install
+        run: npm run build --if-present
       - name: Run App
-        run: npm start
+        run: npm test
 
   # deploy:
   #   runs-on: ubuntu-latest
